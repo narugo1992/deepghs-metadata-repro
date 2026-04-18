@@ -8,6 +8,10 @@ The script does not read `.env` directly. Export environment variables first, th
 
 ```bash
 source .env
+export REPRO_MODE=metadata
+export REPRO_TARGET_REPO=deepghs/nhentai_index
+export REPRO_TARGET_FILE=images.parquet
+export REPRO_PRE_LIST_REPOS=deepghs/nhentai_index
 python deepghs_metadata_repro.py
 ```
 
@@ -15,7 +19,14 @@ Required environment variables:
 
 - `HF_ENDPOINT`
 - `HF_TOKEN`
-- `REMOTE_REPOSITORY_ORD`
+- `REPRO_MODE`
+- `REPRO_TARGET_REPO`
+- `REPRO_TARGET_FILE`
+
+Optional environment variables:
+
+- `REPRO_PRE_LIST_REPOS`
+- `REPRO_TIMEOUT`
 
 ## GitHub Actions
 
@@ -28,14 +39,13 @@ Repository secret required:
 Workflow environment defaults:
 
 - `HF_ENDPOINT=https://hub.deepghs.org`
-- `REMOTE_REPOSITORY_ORD=hk1901/ordered`
 
 ## What the script does
 
-The script runs a small fixed matrix:
+The script performs exactly one deterministic scenario per run:
 
-1. Fresh-process metadata batch after `list_repo_tree(..., expand=True)`.
-2. Fresh-process metadata batch without the pre-list step.
-3. Fresh-process single-file `hf_hub_download` probes for historically flaky targets.
+1. Optionally pre-lists one or more fixed `deepghs/*` repos.
+2. Runs exactly one metadata or download probe against one fixed `deepghs/*` file.
+3. Treats bad metadata or metadata-related download exceptions as a reproduction.
 
 Any bad metadata result or metadata-related `hf_hub_download` exception is treated as a reproduction and exits with a non-zero code.

@@ -2,6 +2,28 @@ name: Reproduce DeepGHS Metadata Error
 
 on:
   workflow_dispatch:
+    inputs:
+      scenario:
+        description: One-shot scenario to execute
+        required: true
+        default: metadata_nhentai_images_prelist
+        type: choice
+        options:
+          - metadata_nhentai_images_direct
+          - metadata_nhentai_images_prelist
+          - download_nhentai_images
+          - metadata_nhentai_posts_direct
+          - metadata_nhentai_posts_prelist
+          - download_nhentai_posts
+          - metadata_anime_pictures_direct
+          - metadata_anime_pictures_prelist
+          - download_anime_pictures
+          - metadata_asiaon_posts_direct
+          - metadata_asiaon_posts_prelist
+          - download_asiaon_posts
+          - metadata_reddit_mostlyhumans_direct
+          - metadata_reddit_mostlyhumans_prelist
+          - download_reddit_mostlyhumans
 
 jobs:
   repro:
@@ -9,7 +31,6 @@ jobs:
     timeout-minutes: 30
     env:
       HF_ENDPOINT: https://hub.deepghs.org
-      REMOTE_REPOSITORY_ORD: hk1901/ordered
       PYTHONUNBUFFERED: "1"
       HF_HUB_DISABLE_PROGRESS_BARS: "1"
     steps:
@@ -23,6 +44,95 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install huggingface_hub==0.36.0 requests==2.32.5
+
+      - name: Resolve scenario
+        run: |
+          case "${{ inputs.scenario }}" in
+            metadata_nhentai_images_direct)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/nhentai_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=images.parquet" >> "$GITHUB_ENV"
+              ;;
+            metadata_nhentai_images_prelist)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/nhentai_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=images.parquet" >> "$GITHUB_ENV"
+              echo "REPRO_PRE_LIST_REPOS=deepghs/nhentai_index" >> "$GITHUB_ENV"
+              ;;
+            download_nhentai_images)
+              echo "REPRO_MODE=download" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/nhentai_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=images.parquet" >> "$GITHUB_ENV"
+              ;;
+            metadata_nhentai_posts_direct)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/nhentai_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=posts.parquet" >> "$GITHUB_ENV"
+              ;;
+            metadata_nhentai_posts_prelist)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/nhentai_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=posts.parquet" >> "$GITHUB_ENV"
+              echo "REPRO_PRE_LIST_REPOS=deepghs/nhentai_index" >> "$GITHUB_ENV"
+              ;;
+            download_nhentai_posts)
+              echo "REPRO_MODE=download" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/nhentai_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=posts.parquet" >> "$GITHUB_ENV"
+              ;;
+            metadata_anime_pictures_direct)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/anime_pictures_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=anime_pictures.parquet" >> "$GITHUB_ENV"
+              ;;
+            metadata_anime_pictures_prelist)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/anime_pictures_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=anime_pictures.parquet" >> "$GITHUB_ENV"
+              echo "REPRO_PRE_LIST_REPOS=deepghs/anime_pictures_index" >> "$GITHUB_ENV"
+              ;;
+            download_anime_pictures)
+              echo "REPRO_MODE=download" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/anime_pictures_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=anime_pictures.parquet" >> "$GITHUB_ENV"
+              ;;
+            metadata_asiaon_posts_direct)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/asiaon_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=posts.parquet" >> "$GITHUB_ENV"
+              ;;
+            metadata_asiaon_posts_prelist)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/asiaon_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=posts.parquet" >> "$GITHUB_ENV"
+              echo "REPRO_PRE_LIST_REPOS=deepghs/asiaon_index" >> "$GITHUB_ENV"
+              ;;
+            download_asiaon_posts)
+              echo "REPRO_MODE=download" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/asiaon_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=posts.parquet" >> "$GITHUB_ENV"
+              ;;
+            metadata_reddit_mostlyhumans_direct)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/reddit_mostlyhumans_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=mostlyhumans.csv" >> "$GITHUB_ENV"
+              ;;
+            metadata_reddit_mostlyhumans_prelist)
+              echo "REPRO_MODE=metadata" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/reddit_mostlyhumans_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=mostlyhumans.csv" >> "$GITHUB_ENV"
+              echo "REPRO_PRE_LIST_REPOS=deepghs/reddit_mostlyhumans_index" >> "$GITHUB_ENV"
+              ;;
+            download_reddit_mostlyhumans)
+              echo "REPRO_MODE=download" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_REPO=deepghs/reddit_mostlyhumans_index" >> "$GITHUB_ENV"
+              echo "REPRO_TARGET_FILE=mostlyhumans.csv" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Unsupported scenario: ${{ inputs.scenario }}" >&2
+              exit 1
+              ;;
+          esac
 
       - name: Run reproduction script
         env:
