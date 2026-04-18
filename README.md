@@ -8,10 +8,9 @@ The script does not read `.env` directly. Export environment variables first, th
 
 ```bash
 source .env
-export REPRO_MODE=metadata
-export REPRO_TARGET_REPO=deepghs/nhentai_index
-export REPRO_TARGET_FILE=images.parquet
-export REPRO_PRE_LIST_REPOS=deepghs/nhentai_index
+export REPRO_MODE=download
+export REPRO_TARGET_REPO=deepghs/reddit_mostlyhumans_index
+export REPRO_TARGET_FILE=mostlyhumans.csv
 python deepghs_metadata_repro.py
 ```
 
@@ -23,14 +22,13 @@ Required environment variables:
 - `REPRO_TARGET_REPO`
 - `REPRO_TARGET_FILE`
 
-Optional environment variables:
-
-- `REPRO_PRE_LIST_REPOS`
-- `REPRO_TIMEOUT`
-
 ## GitHub Actions
 
-The workflow is manual-only (`workflow_dispatch`).
+The workflow is manual-only (`workflow_dispatch`) and is already pinned to the stable one-shot scenario:
+
+- `REPRO_MODE=download`
+- `REPRO_TARGET_REPO=deepghs/reddit_mostlyhumans_index`
+- `REPRO_TARGET_FILE=mostlyhumans.csv`
 
 Repository secret required:
 
@@ -47,5 +45,13 @@ The script performs exactly one deterministic scenario per run:
 1. Optionally pre-lists one or more fixed `deepghs/*` repos.
 2. Runs exactly one metadata or download probe against one fixed `deepghs/*` file.
 3. Treats bad metadata or metadata-related download exceptions as a reproduction.
+
+## Verified GitHub Actions runs
+
+The following runs reproduced the same failure on GitHub-hosted Ubuntu runners:
+
+- `24607211818`
+- `24607232149`
+- `24607247445`
 
 Any bad metadata result or metadata-related `hf_hub_download` exception is treated as a reproduction and exits with a non-zero code.
