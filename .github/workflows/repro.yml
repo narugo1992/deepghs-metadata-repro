@@ -1,0 +1,30 @@
+name: Reproduce DeepGHS Metadata Error
+
+on:
+  workflow_dispatch:
+
+jobs:
+  repro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HF_ENDPOINT: https://hub.deepghs.org
+      REMOTE_REPOSITORY_ORD: hk1901/ordered
+      PYTHONUNBUFFERED: "1"
+      HF_HUB_DISABLE_PROGRESS_BARS: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install huggingface_hub==0.36.0 requests==2.32.5
+
+      - name: Run reproduction script
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python deepghs_metadata_repro.py
