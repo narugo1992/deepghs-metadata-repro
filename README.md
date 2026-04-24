@@ -1,5 +1,18 @@
 # deepghs-metadata-repro
 
+> [!IMPORTANT]
+> **This repo is deprecated — the bug it reproduces is fixed.**
+>
+> - Tracking issue: [deepghs/KohakuHub#24](https://github.com/deepghs/KohakuHub/issues/24) (closed)
+> - Fix: [deepghs/KohakuHub#25](https://github.com/deepghs/KohakuHub/pull/25) (merged 2026-04-24)
+> - Verified in production against `hub.deepghs.org` on a GitHub-hosted Ubuntu runner: [run 24837550364 / job 72701957896](https://github.com/narugo1992/deepghs-metadata-repro/actions/runs/24837550364/job/72701957896) — green, no reproduction detected.
+>
+> The script's contract is that *any* bad-metadata result or metadata-related `hf_hub_download` exception exits non-zero. A green run therefore means the failure mode is absent, not that the bug is still present. The pre-fix runs (`24607211818` / `24607232149` / `24607247445`) all exited non-zero on the same script against the same endpoint, with the exact production exception.
+>
+> Contents below are preserved for historical reference only.
+
+---
+
 Minimal public repro for the intermittent metadata error seen against `https://hub.deepghs.org`.
 
 ## Local run
@@ -48,7 +61,7 @@ The script performs exactly one deterministic scenario per run:
 
 ## Verified GitHub Actions runs
 
-The following runs reproduced the same failure on GitHub-hosted Ubuntu runners:
+The following runs reproduced the same failure on GitHub-hosted Ubuntu runners, **before** the fix in [deepghs/KohakuHub#25](https://github.com/deepghs/KohakuHub/pull/25):
 
 - `24607211818`
 - `24607232149`
